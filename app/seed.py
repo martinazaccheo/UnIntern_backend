@@ -27,12 +27,39 @@ def _uploads_root() -> Path:
 
 
 def _find_upload_url(*, subdir: str, stem: str) -> str | None:
-    """Find an existing image under uploads/<subdir>/<stem>.<ext> and return /uploads/... URL."""
+    """Find an existing image under uploads/<subdir>/ and return a /uploads/... URL.
+
+    Preferred convention:
+    - uploads/<subdir>/<stem>.<ext>
+
+    Fallback (mainly for demo data):
+    - If `stem` is numeric and there are images in uploads/<subdir>/, pick a stable
+      image based on the numeric value. This avoids needing files named exactly by id.
+    """
     root = _uploads_root() / subdir
     for ext in ALLOWED_IMAGE_EXTENSIONS:
         candidate = root / f"{stem}{ext}"
         if candidate.exists():
             return f"/uploads/{subdir}/{candidate.name}"
+
+    # Fallback for numeric stems (e.g. post ids): choose a deterministic existing image.
+    try:
+        numeric = int(stem)
+    except (TypeError, ValueError):
+        return None
+
+    if not root.exists():
+        return None
+
+    images = sorted(
+        [p for p in root.iterdir() if p.is_file() and p.suffix.lower() in ALLOWED_IMAGE_EXTENSIONS],
+        key=lambda p: p.name.lower(),
+    )
+    if not images:
+        return None
+
+    chosen = images[(numeric - 1) % len(images)]
+    return f"/uploads/{subdir}/{chosen.name}"
     return None
 
 

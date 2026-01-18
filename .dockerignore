@@ -1,12 +1,52 @@
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
 .Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
 .venv/
 venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local development
 .env
-unintend.db
+.env.*
+
+# Databases (will be created in container)
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads (will be created in container)
 uploads/*
-!uploads/healthcheck.txt
-!.gitkeep
+!uploads/.gitkeep
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Git
+.git/
+.gitignore
+
+# Docs
+README.md
+*.md

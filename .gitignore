@@ -35,5 +35,6 @@ Thumbs.db
 # Uploads (uncomment if you don't want to commit uploads)
 # uploads/
 
-# Backend DB (keep local / do not commit)
+# Backend marti
 unintend.db
+*.db

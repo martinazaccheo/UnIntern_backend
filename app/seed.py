@@ -12,6 +12,7 @@ from .models import (
 )
 from .auth import hash_password
 from .migrations import ensure_sqlite_columns
+from .storage import uploads_root
 
 PENDING_TEXT = "Message still pending"
 ACCEPTED_TEXT = "Ready to connect?"
@@ -22,8 +23,7 @@ ALLOWED_IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
 
 
 def _uploads_root() -> Path:
-    # workspace-root/uploads
-    return Path(__file__).resolve().parents[1] / "uploads"
+    return uploads_root()
 
 
 def _find_upload_url(*, subdir: str, stem: str) -> str | None:

@@ -29,12 +29,11 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 
+# Allow the committed demo database file
+!unintend.db
+
 # Logs
 *.log
 
 # Uploads (uncomment if you don't want to commit uploads)
 # uploads/
-
-# Backend marti
-unintend.db
-*.db

@@ -1,0 +1,20 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+ruff_cache/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local DBs (Render uses /var/data)
+*.sqlite
+*.sqlite3
+
+# Keep unintend.db if you want to ship it in the image for INITIAL_DB_PATH
+# (do NOT ignore unintend.db)

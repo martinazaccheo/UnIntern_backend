@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env sh
+set -eu
 
 # Persistent storage defaults (Render Persistent Disk)
 DATA_DIR="${DATA_DIR:-/var/data}"
@@ -10,8 +10,8 @@ export UPLOADS_DIR="${UPLOADS_DIR:-${DATA_DIR}/uploads}"
 mkdir -p "${UPLOADS_DIR}"
 
 # If DATABASE_URL isn't set, point it at the persistent SQLite file.
-if [[ -z "${DATABASE_URL:-}" ]]; then
-  export DATABASE_URL="sqlite:///${DB_PATH}"
+if [ -z "${DATABASE_URL:-}" ]; then
+  export DATABASE_URL="sqlite:////${DB_PATH#"/"}"
 fi
 
 python scripts/init_persistent_storage.py

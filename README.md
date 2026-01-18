@@ -165,3 +165,17 @@ bash scripts/render_start.sh
 2) Βάλε προσωρινά `FORCE_DB_INIT=1`
 3) Κάνε Redeploy/Restart το service
 4) Μόλις περάσει η βάση, αφαίρεσε το `FORCE_DB_INIT` (και προαιρετικά και το `INITIAL_DB_URL`)
+
+### Uploads (εικόνες) στο Render
+
+Αν χρησιμοποιείς `UPLOADS_DIR=/var/data/uploads`, ο φάκελος στο disk ξεκινάει άδειος.
+Το start script τρέχει `scripts/init_persistent_storage.py` που, αν το disk uploads είναι άδειο,
+κάνει copy τα αρχικά demo uploads από το repo `uploads/` προς το `UPLOADS_DIR`.
+
+Αν θες να κάνεις overwrite/sync ξανά τα uploads:
+
+- Βάλε προσωρινά `FORCE_UPLOADS_INIT=1` και κάνε Redeploy/Restart.
+
+Μπορείς επίσης να αλλάξεις από πού παίρνει αρχικά uploads με:
+
+- `INITIAL_UPLOADS_PATH=uploads`

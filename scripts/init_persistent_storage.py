@@ -61,10 +61,43 @@ def main() -> int:
         sqlite_path = (Path.cwd() / sqlite_path).resolve()
 
     uploads_dir = (os.getenv("UPLOADS_DIR") or "").strip()
+    uploads_path: Path | None = None
     if uploads_dir:
-        Path(uploads_dir).mkdir(parents=True, exist_ok=True)
+        uploads_path = Path(uploads_dir)
+        uploads_path.mkdir(parents=True, exist_ok=True)
 
     force = (os.getenv("FORCE_DB_INIT") or "").strip().lower() in {"1", "true", "yes"}
+
+    # Uploads init (copy from repo into persistent disk)
+    force_uploads = (os.getenv("FORCE_UPLOADS_INIT") or "").strip().lower() in {"1", "true", "yes"}
+    initial_uploads_path = (os.getenv("INITIAL_UPLOADS_PATH") or "uploads").strip()
+    if uploads_path is not None:
+        src_uploads = Path(initial_uploads_path)
+        if not src_uploads.is_absolute():
+            src_uploads = (Path.cwd() / src_uploads).resolve()
+
+        def _uploads_has_files(p: Path) -> bool:
+            try:
+                return any(p.iterdir())
+            except FileNotFoundError:
+                return False
+
+        if src_uploads.exists() and src_uploads.is_dir():
+            if force_uploads or not _uploads_has_files(uploads_path):
+                if force_uploads:
+                    print(f"[init] FORCE_UPLOADS_INIT=1: syncing uploads from {src_uploads} -> {uploads_path}")
+                else:
+                    print(f"[init] Initializing uploads from {src_uploads} -> {uploads_path}")
+
+                for item in src_uploads.rglob("*"):
+                    if item.is_dir():
+                        continue
+                    rel = item.relative_to(src_uploads)
+                    dest = uploads_path / rel
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    if dest.exists() and not force_uploads:
+                        continue
+                    shutil.copy2(item, dest)
 
     if sqlite_path.exists() and not force:
         print(f"[init] SQLite DB already exists: {sqlite_path} (set FORCE_DB_INIT=1 to overwrite)")

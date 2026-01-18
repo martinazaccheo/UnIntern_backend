@@ -16,6 +16,7 @@ from ..models import (
     StudentExperiencePost,
     StudentProfilePost,
 )
+from ..storage import uploads_root
 from ..url_utils import to_public_url
 
 router = APIRouter(prefix="/media", tags=["media"])
@@ -25,8 +26,7 @@ ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 
 
 def _uploads_root() -> Path:
-    # workspace-root/uploads
-    return (Path(__file__).resolve().parents[2] / "uploads")
+    return uploads_root()
 
 
 def _save_upload(*, upload: UploadFile, subdir: str) -> str:

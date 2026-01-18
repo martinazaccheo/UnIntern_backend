@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
 from .db import engine, Base
+from .storage import uploads_root
 from .routers.auth_routes import router as auth_router
 from .routers.posts_routes import router as posts_router
 from .routers.feed_routes import router as feed_router
@@ -34,7 +35,7 @@ Base.metadata.create_all(bind=engine)
 ensure_sqlite_columns(engine)
 
 # Serve uploaded images
-uploads_dir = (Path(__file__).resolve().parent.parent / "uploads")
+uploads_dir = uploads_root()
 uploads_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
 
